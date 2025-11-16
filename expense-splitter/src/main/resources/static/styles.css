@@ -1,0 +1,115 @@
+/* --- Base Variables and Global Reset --- */
+:root {
+    --primary-color: #1a73e8;
+    --secondary-color: #fbbc05;
+    --background-color: #f7f9fa;
+    --card-bg: #ffffff;
+    --text-color: #3c4043;
+    --success-color: #34a853;
+    --error-color: #ea4335;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding-top: 70px; /* Space for fixed navbar */
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+/* --- Navigation Bar --- */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+    padding: 10px 20px;
+}
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+nav ul li { margin: 0 15px; }
+nav ul li a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+nav ul li a:hover, nav ul li a.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+.main-title {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    margin-right: auto;
+    padding-top: 5px;
+}
+
+/* --- Layout & Grid Containers --- */
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px 0;
+}
+.content-section {
+    display: none; /* Initially hide all content sections */
+}
+.content-section.active {
+    display: block; /* Show active section */
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* --- Card & Typography --- */
+.card {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+h2 { font-size: 1.4rem; color: var(--text-color); border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 20px; }
+
+/* --- Input & Button Styling --- */
+input[type="text"], input[type="number"], input[type="email"], select { width: 100%; padding: 12px; margin: 8px 0 20px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+button { background-color: var(--primary-color); color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 10px; }
+button:hover { background-color: #3b7ad1; }
+
+/* --- Settlement Summary Styling --- */
+#settlements ul, #spendingSummary ul { list-style: none; padding: 0; }
+#settlements li { background-color: #e6f3ff; border-left: 5px solid var(--primary-color); padding: 10px 15px; margin-bottom: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+.user-owes { color: var(--error-color); font-weight: 600;}
+.user-receives { color: var(--success-color); font-weight: 600;}
+.settled-message { background-color: #f0fff4; color: var(--success-color); text-align: center; padding: 15px; border-radius: 8px; }
+
+/* --- Feedback Messages --- */
+.feedback { margin-top: 15px; padding: 10px; border-radius: 6px; }
+.feedback.success { background-color: #d4edda; color: var(--success-color); }
+.feedback.error { background-color: #f8d7da; color: var(--error-color); }
+#spendingSummary li { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #eee; }
+
+/* --- Responsiveness --- */
+@media (min-width: 768px) {
+    #home-page .dashboard-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 1024px) {
+    .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+}
