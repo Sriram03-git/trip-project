@@ -28,13 +28,13 @@ function showPage(pageId, element) {
          element.classList.add('active');
     }
     
-    // Manually trigger resize/render when switching pages
+    // Manually trigger resize/render when switching pages for Chart.js
     if (pageId === 'balance-page') {
-        fetchDataAndRender(); // Re-fetch to ensure data is current
+        fetchDataAndRender(); 
         if (balanceChart) balanceChart.resize();
     }
     if (pageId === 'spending-page') {
-        fetchDataAndRender(); // Re-fetch to ensure data is current
+        fetchDataAndRender(); 
         if (spendingChart) spendingChart.resize();
     }
 }
@@ -90,6 +90,31 @@ async function fetchExpensesData() {
 // 2. RENDER NET BALANCE VISUALIZATION (Dynamic Bar/Line Chart)
 // =========================================================================
 
+function renderSettlements(settlements) {
+    const settlementDiv = document.getElementById('settlements');
+    
+    if (settlements.length === 0) {
+        settlementDiv.innerHTML = '<p class="settled-message">Everyone is settled up! Zero transactions needed.</p>';
+        return;
+    }
+    let html = '<ul>';
+    settlements.forEach(s => {
+        const owesId = s.owesUserId || s.giverId;
+        const receivesId = s.receivesUserId || s.receiverId;
+        const owesName = usersMap[owesId] || `User ID ${owesId}`;
+        const receivesName = usersMap[receivesId] || `User ID ${receivesId}`;
+        html += `
+            <li>
+                <span class="user-owes">${owesName}</span> owes
+                <span class="user-receives">${receivesName}</span>
+                <span class="summary-info">₹${s.amount.toFixed(2)}</span>
+            </li>
+        `;
+    });
+    html += '</ul>';
+    settlementDiv.innerHTML = html;
+}
+
 function renderChart(settlements) {
     // Get selected chart type (default to 'bar' if not set)
     const chartType = document.getElementById('balanceChartType').value;
@@ -115,8 +140,8 @@ function renderChart(settlements) {
     if (balanceChart) { balanceChart.destroy(); }
     
     // Determine the actual chart type and axis based on user selection
-    let finalChartType = (chartType === 'horizontalBar') ? 'bar' : chartType;
-    let indexAxis = (chartType === 'horizontalBar' || chartType === 'line') ? 'x' : 'y';
+    let finalChartType = (chartType === 'horizontalBar' || chartType === 'bar') ? 'bar' : chartType;
+    let indexAxis = (chartType === 'horizontalBar') ? 'y' : 'x';
     
     // Ensure line charts are drawn as lines, not bars
     const datasetType = (finalChartType === 'line') ? 'line' : 'bar'; 
@@ -132,7 +157,7 @@ function renderChart(settlements) {
                 borderColor: (finalChartType === 'line') ? 'rgba(26, 115, 232, 0.7)' : undefined, // Blue border for line
                 borderWidth: 2,
                 type: datasetType, // Ensure line is drawn correctly
-                tension: 0.3, // Curve the line
+                tension: (finalChartType === 'line') ? 0.3 : 0, // Curve the line
                 fill: finalChartType !== 'line' // Fill bars, not lines
             }]
         },
@@ -208,7 +233,7 @@ function renderSpendingBreakdown(expenses) {
     };
 
     const finalChartType = (chartType === 'polarArea') ? 'polarArea' : 
-                           (chartType === 'doughnut' || chartType === 'rotatingPie') ? 'doughnut' : 'pie';
+                           (chartType === 'doughnut') ? 'doughnut' : 'pie';
                            
     spendingChart = new Chart(ctx, {
         type: finalChartType,
@@ -239,7 +264,11 @@ function renderSpendingBreakdown(expenses) {
     summaryDiv.innerHTML = summaryHtml;
 }
 
-// --- SUBMISSION LOGIC (Unchanged) ---
+
+// =========================================================================
+// 4. SUBMISSION LOGIC
+// =========================================================================
+
 async function handleUserSubmit(event) {
     event.preventDefault();
     const form = event.target;

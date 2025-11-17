@@ -10,10 +10,10 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    // Using final keyword and Constructor Injection to manage dependency (Best Practice)
+    // Using final keyword and Constructor Injection (Best Practice)
     private final UserRepository userRepository;
 
-    // Constructor Injection (Spring automatically injects UserRepository here)
+    // Constructor Injection (Spring automatically injects dependencies here)
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

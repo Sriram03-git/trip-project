@@ -14,7 +14,6 @@ import java.util.Optional;
 @RequestMapping("/api/expenses")
 public class ExpenseController {
 
-    // Using final keyword and Constructor Injection
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
 

@@ -1,6 +1,6 @@
 package com.trip.expense_splitter.controller;
 
-import com.trip.expense_splitter.service.SettlementService; // Necessary for calculation logic
+import com.trip.expense_splitter.service.SettlementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +10,9 @@ import java.util.List;
 @RequestMapping("/api/settlements") 
 public class SettlementController {
 
-    // Final reference to the service layer
     private final SettlementService settlementService;
 
-    // Constructor Injection
+    // Constructor Injection (Resolves dependency on the service layer)
     @Autowired
     public SettlementController(SettlementService settlementService) {
         this.settlementService = settlementService;
