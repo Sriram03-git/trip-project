@@ -36,15 +36,32 @@
                 </div>
                 
                 <div class="card" id="expense-form-card">
-                    <h2>➕ Add New Expense (Equal Split)</h2>
+                    <h2>➕ Add New Expense</h2>
                     <p id="expenseMessage" class="feedback"></p>
                     <form id="expenseForm">
                         <label for="description">Description:</label>
-                        <input type="text" id="description" required placeholder="e.g., Hotel, Dinner, Fuel">
+                        <input type="text" id="description" name="description"  placeholder="e.g., Dinner at hotel">
                         <label for="amount">Amount (₹):</label>
-                        <input type="number" id="amount" required min="0.01" step="0.01" placeholder="e.g., 5000.00">
+                        <input type="number" id="amount" name="amount" required min="0.01" step="0.01" placeholder="e.g., 5000.00">
                         <label for="paidById">Paid By (User ID):</label>
-                        <input type="number" id="paidById" required min="1" placeholder="e.g., 1 (Arun)">
+                        <input type="number" id="paidById" name="paidById" required min="1" placeholder="e.g., 1 (Arun)">
+
+                        <label for="expenseCategory">Category:</label>
+                        <select id="expenseCategory" name="expenseCategory" required>
+                            <option value="">-- Select Category --</option> 
+                            <option value="FOOD">FOOD</option>
+                            <option value="HOTEL">HOTEL</option>
+                            <option value="FUEL">FUEL</option>
+                            <option value="SHOPPING">SHOPPING</option>
+                            <option value="MEDICINE">MEDICINE</option>
+                            <option value="OTHER">OTHER</option>
+                        </select>
+                        
+                        <div class="radio-group">
+                            <label>Expense Type:</label>
+                            <label><input type="radio" name="expenseType" value="GROUP" checked> Group Expense (Split)</label>
+                            <label><input type="radio" name="expenseType" value="PERSONAL"> Personal Expense (Not Split)</label>
+                        </div>
                         <button type="submit">Save Expense</button>
                     </form>
                 </div>
@@ -62,7 +79,10 @@
                     <div id="settlements">
                         <p>Calculating settlements...</p>
                     </div>
-                </div>
+                    
+                    <div id="categoryBreakdownSummary" style="margin-top: 30px;">
+                        </div>
+                    </div>
             </div>
         </div>
 

@@ -106,6 +106,78 @@ button:hover { background-color: #3b7ad1; }
 .feedback.error { background-color: #f8d7da; color: var(--error-color); }
 #spendingSummary li { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #eee; }
 
+/* --- NEW STYLES: Expense Form Radio Buttons --- */
+.radio-group {
+    margin: 15px 0 20px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap; /* Added for smaller screens */
+    justify-content: space-around;
+    align-items: center;
+    font-size: 0.95rem;
+}
+.radio-group label {
+    margin: 5px 15px;
+    font-weight: 400;
+    color: #555;
+    cursor: pointer;
+}
+.radio-group input[type="radio"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+/* --- NEW STYLES: Category Breakdown Cards --- */
+#categoryBreakdownSummary {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+}
+#categoryBreakdownSummary h3 {
+    font-size: 1.3rem;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+.category-card {
+    background-color: #fcfcfc;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+.category-title {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+.top-spender-name {
+    color: var(--success-color);
+    font-weight: 700;
+    font-size: 1.1em;
+}
+.spending-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+.spending-list li {
+    padding: 5px 0;
+    font-size: 0.9em;
+    border-bottom: 1px dashed #f0f0f0;
+}
+.spending-list li.top-spender {
+    background-color: #e6ffec; /* Light green background for top spender */
+    padding: 5px;
+    border-radius: 4px;
+}
+
 /* --- Responsiveness --- */
 @media (min-width: 768px) {
     #home-page .dashboard-grid { grid-template-columns: 1fr 1fr; }

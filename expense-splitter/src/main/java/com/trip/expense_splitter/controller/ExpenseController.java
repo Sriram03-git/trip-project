@@ -17,7 +17,6 @@ public class ExpenseController {
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
 
-    // Primary Constructor Injection
     public ExpenseController(ExpenseRepository expenseRepository, UserRepository userRepository) {
         this.expenseRepository = expenseRepository;
         this.userRepository = userRepository;
@@ -38,6 +37,18 @@ public class ExpenseController {
        
         if (paidByUser.isPresent()) {
             expense.setPaidBy(paidByUser.get()); // Attach the full User object
+            
+            // --- NEW: Validate and handle category/expenseType data ---
+            if (expense.getExpenseType() == null) {
+                // If type is not provided, default to GROUP
+                // NOTE: This relies on the default in Expense.java, but explicit check is safer.
+                // For simplicity, we'll let the Expense model handle the default.
+            }
+            if (expense.getCategory() != null) {
+                 expense.setCategory(expense.getCategory().trim().toUpperCase()); // Normalize category
+            }
+            // --------------------------------------------------------
+            
             Expense savedExpense = expenseRepository.save(expense);
             return ResponseEntity.ok(savedExpense);
         } else {

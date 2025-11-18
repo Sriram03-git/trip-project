@@ -2,6 +2,8 @@
 let balanceChart = null;
 let spendingChart = null;
 let usersMap = {};
+// --- NEW: Category Breakdown data ---
+let categoryBreakdown = []; 
         
 // Final Color Constants 
 const ERROR_COLOR = '#ea4335';
@@ -14,9 +16,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('expenseForm').addEventListener('submit', handleExpenseSubmit);
     document.getElementById('userForm').addEventListener('submit', handleUserSubmit);
     document.querySelector('nav ul li a[href="#home"]').classList.add('active');
+    
+    // Set up the default dropdown options for category type
+    populateCategoryDropdown();
 });
 
-// Function to control page visibility
+// Function to populate initial category options (can be extended in HTML/CSS)
+function populateCategoryDropdown() {
+    const categories = ['FOOD', 'HOTEL', 'FUEL', 'SHOPPING', 'MEDICINE', 'OTHER'];
+    const dropdown = document.getElementById('expenseCategory');
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        dropdown.appendChild(option);
+    });
+}
+
+// Function to control page visibility (Minor update)
 function showPage(pageId, element) {
     document.querySelectorAll('.content-section').forEach(section => {
         section.classList.remove('active');
@@ -44,15 +61,21 @@ async function fetchDataAndRender() {
     usersMap = await fetchUsersMap();
     const settlements = await fetchSettlementsData();
     const expenses = await fetchExpensesData(); 
+    // --- NEW: Fetch category breakdown ---
+    categoryBreakdown = await fetchSpendingBreakdown();
     
     renderSettlements(settlements);
     renderChart(settlements);
     renderSpendingBreakdown(expenses); 
+    // --- NEW: Render category breakdown ---
+    renderCategoryBreakdown(categoryBreakdown);
 }
 
 // =========================================================================
 // 1. DATA FETCHING (API Calls)
 // =========================================================================
+
+// (fetchUsersMap, fetchSettlementsData, fetchExpensesData remain the same)
 
 async function fetchUsersMap() {
      try {
@@ -62,6 +85,7 @@ async function fetchUsersMap() {
         users.forEach(user => { map[user.id] = user.name; });
         return map;
     } catch (error) {
+        console.error("Error fetching users:", error);
         return {};
     }
 }
@@ -72,6 +96,7 @@ async function fetchSettlementsData() {
         if (!response.ok) { throw new Error(`Server status: ${response.status}`); }
         return await response.json();
     } catch (error) {
+        console.error("Error fetching settlements:", error);
         return [];
     }
 }
@@ -82,14 +107,27 @@ async function fetchExpensesData() {
         if (!response.ok) { throw new Error(`Server status: ${response.status}`); }
         return await response.json();
     } catch (error) {
+        console.error("Error fetching expenses:", error);
+        return [];
+    }
+}
+
+// --- NEW: API Call to fetch Category Spending Breakdown ---
+async function fetchSpendingBreakdown() {
+    try {
+        const response = await fetch('http://localhost:8080/api/spending-breakdown');
+        if (!response.ok) { throw new Error(`Server status: ${response.status}`); }
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching spending breakdown:", error);
         return [];
     }
 }
 
 // =========================================================================
-// 2. RENDER NET BALANCE VISUALIZATION (Dynamic Bar/Line Chart)
+// 2. RENDER NET BALANCE VISUALIZATION (Dynamic Bar/Line Chart) - REMAINS THE SAME
 // =========================================================================
-
+// (renderSettlements and renderChart remain the same)
 function renderSettlements(settlements) {
     const settlementDiv = document.getElementById('settlements');
     
@@ -185,9 +223,9 @@ function renderChart(settlements) {
 
 
 // =========================================================================
-// 3. RENDER SPENDING CONTRIBUTION (Dynamic Pie/Donut/Polar Chart)
+// 3. RENDER SPENDING CONTRIBUTION (Dynamic Pie/Donut/Polar Chart) - REMAINS THE SAME
 // =========================================================================
-
+// (renderSpendingBreakdown remains the same)
 function renderSpendingBreakdown(expenses) {
     const chartType = document.getElementById('spendingChartType').value;
     const ctx = document.getElementById('spendingChart').getContext('2d');
@@ -266,10 +304,63 @@ function renderSpendingBreakdown(expenses) {
 
 
 // =========================================================================
-// 4. SUBMISSION LOGIC
+// 4. NEW RENDER: CATEGORY SPENDING BREAKDOWN
+// =========================================================================
+
+function renderCategoryBreakdown(categoryData) {
+    const categoryDiv = document.getElementById('categoryBreakdownSummary'); 
+    
+    if (categoryData.length === 0) {
+        categoryDiv.innerHTML = '<p style="text-align: center; color: #666;">No categorized expenses found.</p>';
+        return;
+    }
+    
+    let html = '<h3>Category-wise Top Spenders 🏆</h3>';
+    
+    categoryData.forEach(item => {
+        const topSpenderName = usersMap[item.topSpenderId] || `ID ${item.topSpenderId}`;
+        
+        // Detailed breakdown list for this category
+        let breakdownList = '';
+        Object.entries(item.userSpendingBreakdown)
+            .sort(([, a], [, b]) => b - a) // Sort by amount descending
+            .forEach(([userId, amount]) => {
+                const userName = usersMap[userId] || `ID ${userId}`;
+                const isTopSpender = (parseInt(userId) === item.topSpenderId);
+                breakdownList += `
+                    <li class="${isTopSpender ? 'top-spender' : ''}">
+                        ${userName}: 
+                        <span style="font-weight: 700; color: ${isTopSpender ? SUCCESS_COLOR : '#4285f4'};">
+                            ₹${parseFloat(amount).toFixed(2)}
+                            ${isTopSpender ? ' (Highest)' : ''}
+                        </span>
+                    </li>
+                `;
+            });
+            
+        html += `
+            <div class="category-card">
+                <span class="category-title">${item.category}</span>
+                <p>
+                    <span style="font-weight: 700;">Total Spent: ₹${parseFloat(item.totalCategorySpend).toFixed(2)}</span>
+                    <br>
+                    Highest Contributor: <span class="top-spender-name">${topSpenderName}</span>
+                </p>
+                <ul class="spending-list">${breakdownList}</ul>
+            </div>
+        `;
+    });
+    
+    categoryDiv.innerHTML = html;
+}
+
+
+// =========================================================================
+// 5. SUBMISSION LOGIC (Expense Form Update)
 // =========================================================================
 
 async function handleUserSubmit(event) {
+    // ... (handleUserSubmit remains the same)
     event.preventDefault();
     const form = event.target;
     const messageElement = document.getElementById('userMessage');
@@ -293,6 +384,8 @@ async function handleUserSubmit(event) {
 }
 
 
+// ... (app.js lines 421-438)
+
 async function handleExpenseSubmit(event) {
     event.preventDefault();
     const form = event.target;
@@ -300,12 +393,27 @@ async function handleExpenseSubmit(event) {
     messageElement.classList.remove('success', 'error');
     messageElement.textContent = 'Saving...';
 
+    // Ensure description is an empty string if not filled, to avoid null/undefined issues
+    const descriptionValue = form.description.value ? form.description.value : "";
+    
     const expenseData = {
-        description: form.description.value, amount: parseFloat(form.amount.value), paidBy: { id: parseInt(form.paidById.value, 10) }, splitType: "EQUAL"
+        // --- CRITICAL FIX: Use the optional descriptionValue ---
+        description: descriptionValue, 
+        // ----------------------------------------------------
+        amount: parseFloat(form.amount.value), 
+        paidBy: { id: parseInt(form.paidById.value, 10) },
+        expenseType: form.expenseType.value, 
+        category: form.expenseCategory.value 
     };
+// ... (Rest of the handleExpenseSubmit function remains the same)
+    // --------------------------------------------------------
 
     try {
-        const response = await fetch('http://localhost:8080/api/expenses', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(expenseData) });
+        const response = await fetch('http://localhost:8080/api/expenses', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify(expenseData) 
+        });
 
         if (response.ok) {
             messageElement.textContent = 'Expense saved successfully! Recalculating debt...';
