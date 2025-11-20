@@ -2,38 +2,85 @@
 let balanceChart = null;
 let spendingChart = null;
 let usersMap = {};
-// --- NEW: Category Breakdown data ---
 let categoryBreakdown = []; 
+
+// Theme settings
+const THEMES = {
+    DEVICE: 'device',
+    LIGHT: 'light',
+    DARK: 'dark'
+};
+let currentTheme = THEMES.DEVICE;
         
-// Final Color Constants 
+// Final Color Constants (These remain static for charts/feedback)
 const ERROR_COLOR = '#ea4335';
 const SUCCESS_COLOR = '#34a853';
 const chartColors = ['#4285f4', '#34a853', '#fbbc05', '#ea4335', '#9c27b0', '#00bcd4', '#17a2b8', '#ffc107']; 
 
 // --- INITIALIZATION & PAGE ROUTING ---
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Initialize Theme
+    initializeTheme();
+    
+    // 2. Fetch Data and Render
     fetchDataAndRender();
+    
+    // 3. Setup Event Listeners
     document.getElementById('expenseForm').addEventListener('submit', handleExpenseSubmit);
     document.getElementById('userForm').addEventListener('submit', handleUserSubmit);
     document.querySelector('nav ul li a[href="#home"]').classList.add('active');
     
-    // Set up the default dropdown options for category type
-    populateCategoryDropdown();
+    // Setup the default dropdown options for category type (Removed since now in HTML)
 });
 
-// Function to populate initial category options (can be extended in HTML/CSS)
-function populateCategoryDropdown() {
-    const categories = ['FOOD', 'HOTEL', 'FUEL', 'SHOPPING', 'MEDICINE', 'OTHER'];
-    const dropdown = document.getElementById('expenseCategory');
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = cat;
-        dropdown.appendChild(option);
-    });
+// =========================================================================
+// THEME MANAGEMENT LOGIC
+// =========================================================================
+
+function initializeTheme() {
+    const savedTheme = localStorage.getItem('expense_splitter_theme');
+    if (savedTheme) {
+        currentTheme = savedTheme;
+    }
+    applyTheme();
 }
 
-// Function to control page visibility (Minor update)
+function applyTheme() {
+    const body = document.body;
+    const switcher = document.getElementById('themeSwitcher');
+    
+    body.classList.remove(THEMES.LIGHT + '-theme', THEMES.DARK + '-theme');
+
+    if (currentTheme === THEMES.LIGHT) {
+        body.classList.add(THEMES.LIGHT + '-theme');
+        switcher.textContent = 'Light Theme';
+    } else if (currentTheme === THEMES.DARK) {
+        body.classList.add(THEMES.DARK + '-theme');
+        switcher.textContent = 'Dark Theme';
+    } else { // DEVICE
+        // Apply no class, rely on CSS media query for device preference
+        switcher.textContent = 'Device Theme';
+    }
+    
+    localStorage.setItem('expense_splitter_theme', currentTheme);
+    
+    // Rerender charts to update text color/grid lines if needed (Chart.js doesn't auto-update)
+    fetchDataAndRender();
+}
+
+// Function to cycle through themes (Device -> Light -> Dark -> Device)
+function toggleTheme() {
+    if (currentTheme === THEMES.DEVICE) {
+        currentTheme = THEMES.LIGHT;
+    } else if (currentTheme === THEMES.LIGHT) {
+        currentTheme = THEMES.DARK;
+    } else {
+        currentTheme = THEMES.DEVICE;
+    }
+    applyTheme();
+}
+
+// Function to control page visibility
 function showPage(pageId, element) {
     document.querySelectorAll('.content-section').forEach(section => {
         section.classList.remove('active');
@@ -61,25 +108,24 @@ async function fetchDataAndRender() {
     usersMap = await fetchUsersMap();
     const settlements = await fetchSettlementsData();
     const expenses = await fetchExpensesData(); 
-    // --- NEW: Fetch category breakdown ---
     categoryBreakdown = await fetchSpendingBreakdown();
     
     renderSettlements(settlements);
     renderChart(settlements);
     renderSpendingBreakdown(expenses); 
-    // --- NEW: Render category breakdown ---
     renderCategoryBreakdown(categoryBreakdown);
 }
 
 // =========================================================================
 // 1. DATA FETCHING (API Calls)
+// (API URLs must be updated to the Heroku URL once deployed)
 // =========================================================================
 
-// (fetchUsersMap, fetchSettlementsData, fetchExpensesData remain the same)
+const API_BASE_URL = 'http://localhost:8080/api'; // CHANGE THIS TO YOUR HEROKU URL LATER
 
 async function fetchUsersMap() {
      try {
-        const response = await fetch('http://localhost:8080/api/users');
+        const response = await fetch(`${API_BASE_URL}/users`);
         const users = await response.json();
         const map = {};
         users.forEach(user => { map[user.id] = user.name; });
@@ -92,7 +138,7 @@ async function fetchUsersMap() {
 
 async function fetchSettlementsData() {
      try {
-        const response = await fetch('http://localhost:8080/api/settlements');
+        const response = await fetch(`${API_BASE_URL}/settlements`);
         if (!response.ok) { throw new Error(`Server status: ${response.status}`); }
         return await response.json();
     } catch (error) {
@@ -103,7 +149,7 @@ async function fetchSettlementsData() {
 
 async function fetchExpensesData() {
      try {
-        const response = await fetch('http://localhost:8080/api/expenses');
+        const response = await fetch(`${API_BASE_URL}/expenses`);
         if (!response.ok) { throw new Error(`Server status: ${response.status}`); }
         return await response.json();
     } catch (error) {
@@ -112,10 +158,10 @@ async function fetchExpensesData() {
     }
 }
 
-// --- NEW: API Call to fetch Category Spending Breakdown ---
+// API Call to fetch Category Spending Breakdown
 async function fetchSpendingBreakdown() {
     try {
-        const response = await fetch('http://localhost:8080/api/spending-breakdown');
+        const response = await fetch(`${API_BASE_URL}/spending-breakdown`);
         if (!response.ok) { throw new Error(`Server status: ${response.status}`); }
         return await response.json();
     } catch (error) {
@@ -125,9 +171,15 @@ async function fetchSpendingBreakdown() {
 }
 
 // =========================================================================
-// 2. RENDER NET BALANCE VISUALIZATION (Dynamic Bar/Line Chart) - REMAINS THE SAME
+// 2. RENDER NET BALANCE VISUALIZATION (Dynamic Bar/Line Chart)
 // =========================================================================
-// (renderSettlements and renderChart remain the same)
+
+function getChartTextColor() {
+    // Determine the color of the text for Chart.js based on the active theme
+    const bodyStyles = window.getComputedStyle(document.body);
+    return bodyStyles.getPropertyValue('--text-color').trim();
+}
+
 function renderSettlements(settlements) {
     const settlementDiv = document.getElementById('settlements');
     
@@ -154,7 +206,9 @@ function renderSettlements(settlements) {
 }
 
 function renderChart(settlements) {
-    // Get selected chart type (default to 'bar' if not set)
+    const chartTextColor = getChartTextColor(); // Dynamic text color
+    const chartGridColor = getChartTextColor() === '#e0e0e0' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    
     const chartType = document.getElementById('balanceChartType').value;
     const ctx = document.getElementById('balanceChart').getContext('2d');
     
@@ -172,16 +226,12 @@ function renderChart(settlements) {
     const labels = Object.keys(netBalance).map(id => usersMap[id] || `ID ${id}`);
     const data = Object.values(netBalance).map(val => val.toFixed(2));
     
-    // Bar Chart colors based on debt/receivable status
     const backgroundColors = data.map(val => val < 0 ? ERROR_COLOR : SUCCESS_COLOR);
     
     if (balanceChart) { balanceChart.destroy(); }
     
-    // Determine the actual chart type and axis based on user selection
     let finalChartType = (chartType === 'horizontalBar' || chartType === 'bar') ? 'bar' : chartType;
     let indexAxis = (chartType === 'horizontalBar') ? 'y' : 'x';
-    
-    // Ensure line charts are drawn as lines, not bars
     const datasetType = (finalChartType === 'line') ? 'line' : 'bar'; 
 
     balanceChart = new Chart(ctx, {
@@ -192,30 +242,37 @@ function renderChart(settlements) {
                 label: 'Net Balance (Owed/Receivable)',
                 data: data,
                 backgroundColor: backgroundColors,
-                borderColor: (finalChartType === 'line') ? 'rgba(26, 115, 232, 0.7)' : undefined, // Blue border for line
+                borderColor: (finalChartType === 'line') ? 'rgba(26, 115, 232, 0.7)' : undefined,
                 borderWidth: 2,
-                type: datasetType, // Ensure line is drawn correctly
-                tension: (finalChartType === 'line') ? 0.3 : 0, // Curve the line
-                fill: finalChartType !== 'line' // Fill bars, not lines
+                type: datasetType, 
+                tension: (finalChartType === 'line') ? 0.3 : 0, 
+                fill: finalChartType !== 'line' 
             }]
         },
         options: {
-            indexAxis: indexAxis, // For horizontal bar
+            indexAxis: indexAxis, 
             responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { 
+                    display: true, 
+                    text: 'Final Net Debt/Receivable',
+                    color: chartTextColor
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
-                    title: { display: true, text: 'Amount (₹)' }
+                    title: { display: true, text: 'Amount (₹)', color: chartTextColor },
+                    ticks: { color: chartTextColor },
+                    grid: { color: chartGridColor }
                 },
                 x: {
                     beginAtZero: true,
-                    title: { display: true, text: 'User' },
-                    ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 }
+                    title: { display: true, text: 'User', color: chartTextColor },
+                    ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: chartTextColor },
+                    grid: { color: chartGridColor }
                 }
-            },
-            plugins: {
-                legend: { display: false },
-                title: { display: true, text: 'Final Net Debt/Receivable' }
             }
         }
     });
@@ -223,10 +280,11 @@ function renderChart(settlements) {
 
 
 // =========================================================================
-// 3. RENDER SPENDING CONTRIBUTION (Dynamic Pie/Donut/Polar Chart) - REMAINS THE SAME
+// 3. RENDER SPENDING CONTRIBUTION (Dynamic Pie/Donut/Polar Chart)
 // =========================================================================
-// (renderSpendingBreakdown remains the same)
+
 function renderSpendingBreakdown(expenses) {
+    const chartTextColor = getChartTextColor(); // Dynamic text color
     const chartType = document.getElementById('spendingChartType').value;
     const ctx = document.getElementById('spendingChart').getContext('2d');
     const summaryDiv = document.getElementById('spendingSummary');
@@ -242,7 +300,7 @@ function renderSpendingBreakdown(expenses) {
     });
 
     if (totalSpent === 0) {
-        summaryDiv.innerHTML = '<p style="text-align: center; color: #666;">No expenses added yet.</p>';
+        summaryDiv.innerHTML = '<p style="text-align: center; color: var(--text-color);">No expenses added yet.</p>';
         if (spendingChart) spendingChart.destroy();
         return;
     }
@@ -258,16 +316,21 @@ function renderSpendingBreakdown(expenses) {
 
     if (spendingChart) spendingChart.destroy();
 
-    // Setup dynamic options based on chart type
     let options = {
         responsive: true,
         plugins: {
-            legend: { position: 'right' },
-            title: { display: true, text: `Total Trip Spend: ₹${totalSpent.toFixed(2)}` }
+            legend: { 
+                position: 'right',
+                labels: { color: chartTextColor }
+            },
+            title: { 
+                display: true, 
+                text: `Total Trip Spend: ₹${totalSpent.toFixed(2)}`,
+                color: chartTextColor
+            }
         },
-        // PIE/DONUT/POLAR OPTIONS
-        cutout: (chartType === 'doughnut') ? '40%' : '0%', // Adds donut hole
-        rotation: (chartType === 'rotatingPie') ? 100 : 0 // Adds visual rotation/tilt
+        cutout: (chartType === 'doughnut') ? '40%' : '0%', 
+        rotation: (chartType === 'rotatingPie') ? 100 : 0 
     };
 
     const finalChartType = (chartType === 'polarArea') ? 'polarArea' : 
@@ -304,14 +367,14 @@ function renderSpendingBreakdown(expenses) {
 
 
 // =========================================================================
-// 4. NEW RENDER: CATEGORY SPENDING BREAKDOWN
+// 4. CATEGORY SPENDING BREAKDOWN
 // =========================================================================
 
 function renderCategoryBreakdown(categoryData) {
     const categoryDiv = document.getElementById('categoryBreakdownSummary'); 
     
     if (categoryData.length === 0) {
-        categoryDiv.innerHTML = '<p style="text-align: center; color: #666;">No categorized expenses found.</p>';
+        categoryDiv.innerHTML = '<p style="text-align: center; color: var(--text-color);">No categorized expenses found.</p>';
         return;
     }
     
@@ -320,17 +383,16 @@ function renderCategoryBreakdown(categoryData) {
     categoryData.forEach(item => {
         const topSpenderName = usersMap[item.topSpenderId] || `ID ${item.topSpenderId}`;
         
-        // Detailed breakdown list for this category
         let breakdownList = '';
         Object.entries(item.userSpendingBreakdown)
-            .sort(([, a], [, b]) => b - a) // Sort by amount descending
+            .sort(([, a], [, b]) => b - a) 
             .forEach(([userId, amount]) => {
                 const userName = usersMap[userId] || `ID ${userId}`;
                 const isTopSpender = (parseInt(userId) === item.topSpenderId);
                 breakdownList += `
                     <li class="${isTopSpender ? 'top-spender' : ''}">
-                        ${userName}: 
-                        <span style="font-weight: 700; color: ${isTopSpender ? SUCCESS_COLOR : '#4285f4'};">
+                        <span>${userName}:</span>
+                        <span style="font-weight: 700; color: ${isTopSpender ? 'var(--success-color)' : 'var(--primary-color)'};">
                             ₹${parseFloat(amount).toFixed(2)}
                             ${isTopSpender ? ' (Highest)' : ''}
                         </span>
@@ -356,11 +418,10 @@ function renderCategoryBreakdown(categoryData) {
 
 
 // =========================================================================
-// 5. SUBMISSION LOGIC (Expense Form Update)
+// 5. SUBMISSION LOGIC
 // =========================================================================
 
 async function handleUserSubmit(event) {
-    // ... (handleUserSubmit remains the same)
     event.preventDefault();
     const form = event.target;
     const messageElement = document.getElementById('userMessage');
@@ -369,7 +430,7 @@ async function handleUserSubmit(event) {
 
     const userData = { name: form.userName.value, email: form.userEmail.value };
     try {
-        const response = await fetch('http://localhost:8080/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(userData) });
+        const response = await fetch(`${API_BASE_URL}/users`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(userData) });
         const result = await response.json();
         if (response.ok) {
             messageElement.textContent = `User ${result.name} registered successfully with ID: ${result.id}`;
@@ -384,8 +445,6 @@ async function handleUserSubmit(event) {
 }
 
 
-// ... (app.js lines 421-438)
-
 async function handleExpenseSubmit(event) {
     event.preventDefault();
     const form = event.target;
@@ -393,23 +452,18 @@ async function handleExpenseSubmit(event) {
     messageElement.classList.remove('success', 'error');
     messageElement.textContent = 'Saving...';
 
-    // Ensure description is an empty string if not filled, to avoid null/undefined issues
     const descriptionValue = form.description.value ? form.description.value : "";
     
     const expenseData = {
-        // --- CRITICAL FIX: Use the optional descriptionValue ---
         description: descriptionValue, 
-        // ----------------------------------------------------
         amount: parseFloat(form.amount.value), 
         paidBy: { id: parseInt(form.paidById.value, 10) },
         expenseType: form.expenseType.value, 
         category: form.expenseCategory.value 
     };
-// ... (Rest of the handleExpenseSubmit function remains the same)
-    // --------------------------------------------------------
 
     try {
-        const response = await fetch('http://localhost:8080/api/expenses', { 
+        const response = await fetch(`${API_BASE_URL}/expenses`, { 
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' }, 
             body: JSON.stringify(expenseData) 
