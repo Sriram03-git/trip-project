@@ -12,11 +12,12 @@
     <nav>
         <ul>
             <li class="main-title">Collaborative Expense Splitter</li>
-            <li><a href="#home" onclick="showPage('home-page', this)">Home</a></li>
-            <li><a href="#settlements" onclick="showPage('settlement-page', this)">Simplified Settlements</a></li>
-            <li><a href="#spending" onclick="showPage('spending-page', this)">Spending Contribution</a></li>
-            <li><a href="#balance" onclick="showPage('balance-page', this)">Net Balance Visualization</a></li>
-            <!-- NEW: Theme Switcher -->
+            <div class="nav-links-group"> 
+                <li><a href="#home" onclick="showPage('home-page', this)" class="active">Home</a></li>
+                <li><a href="#settlements" onclick="showPage('settlement-page', this)">Settlements</a></li>
+                <li><a href="#spending" onclick="showPage('spending-page', this)">Spending</a></li>
+                <li><a href="#balance" onclick="showPage('balance-page', this)">Balance</a></li>
+            </div>
             <li><button id="themeSwitcher" class="theme-switcher" onclick="toggleTheme()">Device Theme</button></li>
         </ul>
     </nav>
@@ -24,104 +25,16 @@
     <div class="page-container">
         
         <div id="home-page" class="content-section active">
-            <div class="dashboard-grid">
-                <div class="card" id="user-form-card">
-                    <h2>👤 Register New User</h2>
-                    <p id="userMessage" class="feedback"></p>
-                    <form id="userForm">
-                        <label for="userName">Name:</label>
-                        <input type="text" id="userName" name="userName" required placeholder="e.g., Chitra">
-                        <label for="userEmail">Email:</label>
-                        <input type="email" id="userEmail" name="userEmail" required placeholder="e.g., chitra@test.com">
-                        <button type="submit">Register User</button>
-                    </form>
-                </div>
-                
-                <div class="card" id="expense-form-card">
-                    <h2>➕ Add New Expense</h2>
-                    <p id="expenseMessage" class="feedback"></p>
-                    <form id="expenseForm">
-                        <label for="description">Description:</label>
-                        <input type="text" id="description" name="description" placeholder="e.g., Dinner at hotel">
-                        <label for="amount">Amount (₹):</label>
-                        <input type="number" id="amount" name="amount" required min="0.01" step="0.01" placeholder="e.g., 5000.00">
-                        <label for="paidById">Paid By (User ID):</label>
-                        <input type="number" id="paidById" name="paidById" required min="1" placeholder="e.g., 1 (Arun)">
-
-                        <label for="expenseCategory">Category:</label>
-                        <select id="expenseCategory" name="expenseCategory" required>
-                            <option value="">-- Select Category --</option> 
-                            <option value="FOOD">FOOD</option>
-                            <option value="HOTEL">HOTEL</option>
-                            <option value="FUEL">FUEL</option>
-                            <option value="SHOPPING">SHOPPING</option>
-                            <option value="MEDICINE">MEDICINE</option>
-                             <option value="TRANSPORT">TRANSPORT(BUS,CAR,AUTO,CAB)</option>
-                            <option value="OTHER">OTHER</option>
-                        </select>
-                        
-                        <div class="radio-group">
-                            <label>Expense Type:</label>
-                            <label><input type="radio" name="expenseType" value="GROUP" checked> Group Expense (Split)</label>
-                            <label><input type="radio" name="expenseType" value="PERSONAL"> Personal Expense (Not Split)</label>
-                        </div>
-
-                        <button type="submit">Save Expense</button>
-                    </form>
-                </div>
-                
-                <div class="card" style="grid-column: 1 / -1;">
-                    <p style="font-size: 0.9em; color: #666; text-align: center;">Note: Use the registration form to create users first before adding expenses.</p>
-                </div>
             </div>
-        </div>
 
         <div id="settlement-page" class="content-section">
-            <div class="dashboard-grid">
-                <div class="card" id="summary-card" style="grid-column: 1 / -1;">
-                    <h2>💰 Simplified Settlements List</h2>
-                    <div id="settlements">
-                        <p>Calculating settlements...</p>
-                    </div>
-                    
-                    <div id="categoryBreakdownSummary" style="margin-top: 30px;">
-                        <!-- Category-wise spending breakdown will be rendered here -->
-                    </div>
-                </div>
             </div>
-        </div>
 
         <div id="spending-page" class="content-section">
-            <div class="dashboard-grid">
-                <div class="card" id="spending-card" style="grid-column: 1 / -1;">
-                    <h2>💸 Spending Contribution Breakdown</h2>
-                    <label for="spendingChartType" style="font-weight: 600;">Select Chart Type:</label>
-                    <select id="spendingChartType" onchange="fetchDataAndRender()">
-                        <option value="pie">Pie Chart (Standard)</option>
-                        <option value="doughnut">Donut Chart (Hole)</option>
-                        <option value="polarArea">Polar Area (Visual Comparison)</option>
-                        <option value="rotatingPie">Rotating Pie (Visual Tilt)</option>
-                    </select>
-                    <canvas id="spendingChart"></canvas>
-                    <div id="spendingSummary" style="margin-top: 20px;"></div>
-                </div>
             </div>
-        </div>
 
         <div id="balance-page" class="content-section">
-            <div class="dashboard-grid">
-                <div class="card" id="chart-card" style="grid-column: 1 / -1;">
-                    <h2>📊 Net Balance Visualization</h2>
-                    <label for="balanceChartType" style="font-weight: 600;">Select Chart Type:</label>
-                    <select id="balanceChartType" onchange="fetchDataAndRender()">
-                        <option value="bar">Bar Chart (Net Balance)</option>
-                        <option value="horizontalBar">Horizontal Bar</option>
-                        <option value="line">Line Chart (Trend)</option>
-                    </select>
-                    <canvas id="balanceChart"></canvas>
-                </div>
             </div>
-        </div>
         
     </div>
 
