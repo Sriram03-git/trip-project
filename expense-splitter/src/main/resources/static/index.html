@@ -12,11 +12,12 @@
     <nav>
         <ul>
             <li class="main-title">Collaborative Expense Splitter</li>
-            <li><a href="#home" onclick="showPage('home-page', this)">Home</a></li>
-            <li><a href="#settlements" onclick="showPage('settlement-page', this)">Simplified Settlements</a></li>
-            <li><a href="#spending" onclick="showPage('spending-page', this)">Spending Contribution</a></li>
-            <li><a href="#balance" onclick="showPage('balance-page', this)">Net Balance Visualization</a></li>
-            <!-- NEW: Theme Switcher -->
+            <div class="nav-links-group"> 
+                <li><a href="#home" onclick="showPage('home-page', this)" class="active">Home</a></li>
+                <li><a href="#settlements" onclick="showPage('settlement-page', this)">Simplified Settlements</a></li>
+                <li><a href="#spending" onclick="showPage('spending-page', this)">Spending Contribution</a></li>
+                <li><a href="#balance" onclick="showPage('balance-page', this)">Net Balance Visualization</a></li>
+            </div>
             <li><button id="themeSwitcher" class="theme-switcher" onclick="toggleTheme()">Device Theme</button></li>
         </ul>
     </nav>
@@ -85,8 +86,7 @@
                     </div>
                     
                     <div id="categoryBreakdownSummary" style="margin-top: 30px;">
-                        <!-- Category-wise spending breakdown will be rendered here -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>

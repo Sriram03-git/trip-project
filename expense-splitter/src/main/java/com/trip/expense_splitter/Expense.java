@@ -31,8 +31,6 @@ public class Expense {
 
     @Column(nullable = false)
     private LocalDate expenseDate = LocalDate.now();
-
-    // --- புதிய ஃபீல்டுகள் ---
     
     // Defines if the expense is 'PERSONAL' (not split) or 'GROUP' (to be split)
     @Enumerated(EnumType.STRING) // Saves the enum as a String in the DB
