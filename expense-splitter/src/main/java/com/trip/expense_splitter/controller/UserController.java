@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "https://trip-project-0ufy.onrender.com")
 public class UserController {
 
     // Using final keyword and Constructor Injection (Best Practice)

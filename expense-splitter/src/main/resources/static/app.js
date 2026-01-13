@@ -121,7 +121,7 @@ async function fetchDataAndRender() {
 // (API URLs must be updated to the Heroku URL once deployed)
 // =========================================================================
 
-const API_BASE_URL = 'http://localhost:8080/api'; // CHANGE THIS TO YOUR HEROKU URL LATER
+const API_BASE_URL = 'https://trip-project-0ufy.onrender.com/api'; // CHANGE THIS TO YOUR HEROKU URL LATER
 
 async function fetchUsersMap() {
      try {
