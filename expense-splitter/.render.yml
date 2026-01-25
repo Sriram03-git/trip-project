@@ -1,5 +1,0 @@
-build:
-  # This section forces Render to use the Java Buildpack
-  env: java
-  java:
-    version: 21

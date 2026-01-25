@@ -1,363 +1,498 @@
 /* --- Base Variables and Global Reset --- */
 :root {
-    /* LIGHT THEME Defaults (Used when when no preference or 'light' is set) */
-    --primary-color: #1a73e8; /* Google Blue */
-    --secondary-color: #fbbc05; /* Google Yellow */
-    --background-color: #f7f9fa;
-    --card-bg: #ffffff;
-    --text-color: #3c4043; /* Dark text for light background */
-    --success-color: #34a853;
-    --error-color: #ea4335;
-    --nav-bg: #ffffff;
-    --border-color: #f0f0f0;
+  /* LIGHT THEME Defaults (Used when when no preference or 'light' is set) */
+  --primary-color: #1a73e8; /* Google Blue */
+  --secondary-color: #fbbc05; /* Google Yellow */
+  --background-color: #f7f9fa;
+  --card-bg: #ffffff;
+  --text-color: #3c4043; /* Dark text for light background */
+  --success-color: #34a853;
+  --error-color: #ea4335;
+  --nav-bg: #ffffff;
+  --border-color: #f0f0f0;
 
-    /* LIGHT THEME Specific Settlement Styles */
-    --settlement-bg: #e6f3ff; /* Light blue background for list items */
-    --settlement-info-bg: #ffffff;
+  /* LIGHT THEME Specific Settlement Styles */
+  --settlement-bg: #e6f3ff; /* Light blue background for list items */
+  --settlement-info-bg: #ffffff;
 }
 
 /* --- DARK THEME Overrides (System Preference) --- */
 @media (prefers-color-scheme: dark) {
-    :root {
-        --background-color: #121212;
-        --card-bg: #1e1e1e;
-        --text-color: #e0e0e0; /* Light text for dark background */
-        --nav-bg: #1e1e1e;
-        --border-color: #333333;
+  :root {
+    --background-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0; /* Light text for dark background */
+    --nav-bg: #1e1e1e;
+    --border-color: #333333;
 
-        /* DARK THEME Specific Settlement Styles */
-        --settlement-bg: #2c2c2c; 
-        --settlement-info-bg: #1e1e1e;
-    }
+    /* DARK THEME Specific Settlement Styles */
+    --settlement-bg: #2c2c2c;
+    --settlement-info-bg: #1e1e1e;
+  }
 }
 
 /* Explicit DARK THEME Class */
 .dark-theme {
-    --background-color: #121212;
-    --card-bg: #1e1e1e;
-    --text-color: #ffffff; /* Explicit white text */
-    --nav-bg: #1e1e1e;
-    --border-color: #333333;
+  --background-color: #121212;
+  --card-bg: #1e1e1e;
+  --text-color: #ffffff; /* Explicit white text */
+  --nav-bg: #1e1e1e;
+  --border-color: #333333;
 
-    /* Explicit DARK THEME Specific Settlement Styles (FIX FOR VISIBILITY) */
-    --settlement-bg: #2c2c2c; 
-    --settlement-info-bg: #1e1e1e;
+  /* Explicit DARK THEME Specific Settlement Styles (FIX FOR VISIBILITY) */
+  --settlement-bg: #2c2c2c;
+  --settlement-info-bg: #1e1e1e;
 }
 
 /* Explicit LIGHT THEME Class (To override system dark if user clicks light button) */
 .light-theme {
-    --background-color: #f7f9fa;
-    --card-bg: #ffffff;
-    --text-color: #3c4043;
-    --nav-bg: #ffffff;
-    --border-color: #f0f0f0;
-    
-    /* Explicit LIGHT THEME Specific Settlement Styles */
-    --settlement-bg: #e6f3ff;
-    --settlement-info-bg: #ffffff;
+  --background-color: #f7f9fa;
+  --card-bg: #ffffff;
+  --text-color: #3c4043;
+  --nav-bg: #ffffff;
+  --border-color: #f0f0f0;
+
+  /* Explicit LIGHT THEME Specific Settlement Styles */
+  --settlement-bg: #e6f3ff;
+  --settlement-info-bg: #ffffff;
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--background-color);
-    margin: 0;
-    padding-top: 70px; /* Space for fixed nav */
-    color: var(--text-color);
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    transition: background-color 0.3s, color 0.3s;
+  font-family: "Poppins", sans-serif;
+  background-color: var(--background-color);
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
+  display: flex;
+  min-height: 100vh;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
-/* --- Navigation Bar (Mobile First) --- */
-nav {
+/* --- Sidebar Navigation --- */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  background-color: var(--card-bg);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 20px 0;
+  transition:
+    width 0.3s,
+    background-color 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar-toggle {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  padding: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: color 0.3s;
+}
+
+.sidebar-toggle:hover {
+  color: var(--primary-color);
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.sidebar-menu li {
+  margin: 5px 0;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  border-radius: 0 25px 25px 0;
+  margin-right: 10px;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.sidebar-link i {
+  margin-right: 15px;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar-link span {
+  transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .sidebar-link span {
+  opacity: 0;
+  position: absolute;
+  left: -9999px;
+}
+
+.sidebar.collapsed .sidebar-link {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sidebar-themes {
+  padding: 0 20px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  font-size: 0.9rem;
+}
+
+.theme-btn:hover,
+.theme-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.theme-btn i {
+  margin-right: 10px;
+  width: 16px;
+}
+
+.theme-btn span {
+  transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .theme-btn span {
+  opacity: 0;
+  position: absolute;
+  left: -9999px;
+}
+
+.sidebar.collapsed .theme-btn {
+  justify-content: center;
+  padding: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+  .page-container {
+    margin-left: 200px;
+  }
+  .sidebar.collapsed {
+    width: 60px;
+  }
+  .page-container.collapsed {
+    margin-left: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: var(--nav-bg);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    z-index: 1000;
-    padding: 10px 5px; 
-    transition: background-color 0.3s;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .page-container {
+    margin-left: 0;
+  }
+  .sidebar-toggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+  }
 }
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap; 
-    justify-content: space-between;
-    align-items: center;
-}
-.nav-links-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-}
-nav ul li { margin: 0 5px; } 
-nav ul li a {
-    text-decoration: none;
-    color: var(--text-color);
-    font-weight: 600;
-    padding: 6px 8px; 
-    border-radius: 6px;
-    transition: background-color 0.3s, color 0.3s;
-    font-size: 0.85em; 
-    display: block; 
-}
-nav ul li a:hover, nav ul li a.active {
-    background-color: var(--primary-color);
-    color: white;
-}
-.main-title {
-    color: var(--primary-color);
-    font-size: 1.0rem;
-    font-weight: 700;
-    margin-right: auto;
-    padding: 5px;
-}
-/* Theme Switcher Button */
-.theme-switcher {
-    padding: 5px 8px;
-    cursor: pointer;
-    background-color: transparent;
-    border: 1px solid var(--text-color);
-    color: var(--text-color);
-    border-radius: 6px;
-    font-size: 0.75em;
-    font-weight: 600;
-    transition: background-color 0.3s, color 0.3s;
-}
-.theme-switcher:hover {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-/* --- Layout & Grid Containers --- */
 .page-container {
-    width: 100%;
-    max-width: 1200px;
-    padding: 20px 15px;
+  flex: 1;
+  margin-left: 250px;
+  padding: 20px 15px;
+  transition: margin-left 0.3s;
 }
-.content-section { display: none; }
-.content-section.active { display: block; }
+.content-section {
+  display: none;
+}
+.content-section.active {
+  display: block;
+}
 
 /* MOBILE FIRST: Single column layout by default */
 .dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px; 
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
 }
 
 /* --- Card & Typography --- */
 .card {
-    background-color: var(--card-bg);
-    padding: 18px; 
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
-    transition: background-color 0.3s;
+  background-color: var(--card-bg);
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s;
 }
-h2 { 
-    font-size: 1.25rem; 
-    color: var(--text-color); 
-    border-bottom: 2px solid var(--border-color); 
-    padding-bottom: 8px; 
-    margin-bottom: 12px;
-    transition: border-color 0.3s;
+h2 {
+  font-size: 1.25rem;
+  color: var(--text-color);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  transition: border-color 0.3s;
 }
 
 /* --- Input & Button Styling --- */
-input[type="text"], input[type="number"], input[type="email"], select { 
-    width: 100%; 
-    padding: 10px; 
-    margin: 6px 0 12px 0; 
-    border: 1px solid var(--border-color); 
-    border-radius: 6px; 
-    box-sizing: border-box; 
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    transition: border-color 0.3s, background-color 0.3s;
+input[type="text"],
+input[type="number"],
+input[type="email"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0 12px 0;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  transition:
+    border-color 0.3s,
+    background-color 0.3s;
 }
-button { 
-    background-color: var(--primary-color); 
-    color: white; 
-    padding: 10px 15px; 
-    border: none; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    width: 100%; 
-    margin-bottom: 10px;
-    transition: background-color 0.3s; 
+button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 10px;
+  transition: background-color 0.3s;
 }
-button:hover { background-color: #3b7ad1; }
+button:hover {
+  background-color: #3b7ad1;
+}
 
 /* --- Settlement Summary Styling (Uses theme variables for fix) --- */
-#settlements ul, #spendingSummary ul { list-style: none; padding: 0; }
-#settlements li { 
-    /* Uses theme variable for BG */
-    background-color: var(--settlement-bg); 
-    border-left: 5px solid var(--primary-color); 
-    padding: 12px; 
-    margin-bottom: 10px; 
-    border-radius: 6px; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: flex-start;
-    color: var(--text-color); /* Inherit general text color */
+#settlements ul,
+#spendingSummary ul {
+  list-style: none;
+  padding: 0;
 }
-.user-owes { color: var(--error-color); font-weight: 600; font-size: 1.1em; }
-.user-receives { color: var(--success-color); font-weight: 600; font-size: 1.1em; }
-.summary-info { 
-    /* Uses theme variable for the amount box BG (Fixing the dark theme visibility) */
-    background-color: var(--settlement-info-bg);
-    margin-top: 5px; 
-    font-size: 1em; 
-    padding: 3px 8px; 
-    border-radius: 4px; 
-    width: 100%;
-    box-sizing: border-box; 
-    color: var(--text-color); /* Ensure text color is correct for the theme */
+#settlements li {
+  /* Uses theme variable for BG */
+  background-color: var(--settlement-bg);
+  border-left: 5px solid var(--primary-color);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--text-color); /* Inherit general text color */
 }
-.settled-message { background-color: #f0fff4; color: var(--success-color); text-align: center; padding: 15px; border-radius: 8px; }
+.user-owes {
+  color: var(--error-color);
+  font-weight: 600;
+  font-size: 1.1em;
+}
+.user-receives {
+  color: var(--success-color);
+  font-weight: 600;
+  font-size: 1.1em;
+}
+.summary-info {
+  /* Uses theme variable for the amount box BG (Fixing the dark theme visibility) */
+  background-color: var(--settlement-info-bg);
+  margin-top: 5px;
+  font-size: 1em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--text-color); /* Ensure text color is correct for the theme */
+}
+.settled-message {
+  background-color: #f0fff4;
+  color: var(--success-color);
+  text-align: center;
+  padding: 15px;
+  border-radius: 8px;
+}
 
 /* --- Feedback Messages & Other Lists --- */
-.feedback { margin-top: 15px; padding: 10px; border-radius: 6px; }
-.feedback.success { background-color: var(--success-color); color: white; }
-.feedback.error { background-color: var(--error-color); color: white; }
-#spendingSummary li { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed var(--border-color); }
+.feedback {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 6px;
+}
+.feedback.success {
+  background-color: var(--success-color);
+  color: white;
+}
+.feedback.error {
+  background-color: var(--error-color);
+  color: white;
+}
+#spendingSummary li {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px dashed var(--border-color);
+}
 
 /* --- Expense Form Radio Buttons --- */
 .radio-group {
-    margin: 15px 0 20px 0;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column; 
-    align-items: flex-start;
-    font-size: 0.95rem;
-    transition: border-color 0.3s;
+  margin: 15px 0 20px 0;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 0.95rem;
+  transition: border-color 0.3s;
 }
 .radio-group label {
-    margin: 5px 0;
-    font-weight: 400;
-    color: var(--text-color);
-    cursor: pointer;
+  margin: 5px 0;
+  font-weight: 400;
+  color: var(--text-color);
+  cursor: pointer;
 }
 .radio-group input[type="radio"] {
-    width: auto;
-    margin-right: 5px;
+  width: auto;
+  margin-right: 5px;
 }
 
 /* --- Category Breakdown Cards --- */
 #categoryBreakdownSummary {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 2px solid var(--border-color);
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid var(--border-color);
 }
 #categoryBreakdownSummary h3 {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
 }
 .category-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    box-shadow: none; 
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: none;
 }
 .spending-list li.top-spender {
-    /* Use a light tint of success color for high spender background */
-    background-color: rgba(52, 168, 83, 0.1); 
-    padding: 5px;
-    border-radius: 4px;
+  /* Use a light tint of success color for high spender background */
+  background-color: rgba(52, 168, 83, 0.1);
+  padding: 5px;
+  border-radius: 4px;
 }
-
 
 /* ======================================= */
 /* --- Responsive Layout Breakpoints --- */
 /* ======================================= */
 
-
 /* 📱 Tablet View (600px and up) */
 @media (min-width: 600px) {
-    /* Navigation: Allow links to flow horizontally better */
-    nav ul {
-        justify-content: space-around;
-        flex-wrap: nowrap; 
-    }
-    .main-title {
-        font-size: 1.1rem;
-        flex-grow: 0; 
-    }
-    nav ul li a { 
-        font-size: 0.95em; 
-        padding: 8px 10px;
-    }
-    .nav-links-group {
-        flex-grow: 1; 
-        justify-content: center;
-    }
+  /* Navigation: Allow links to flow horizontally better */
+  nav ul {
+    justify-content: space-around;
+    flex-wrap: nowrap;
+  }
+  .main-title {
+    font-size: 1.1rem;
+    flex-grow: 0;
+  }
+  nav ul li a {
+    font-size: 0.95em;
+    padding: 8px 10px;
+  }
+  .nav-links-group {
+    flex-grow: 1;
+    justify-content: center;
+  }
 
-    /* Layout: Two columns for forms */
-    #home-page .dashboard-grid { 
-        grid-template-columns: 1fr 1fr; 
-        gap: 20px;
-    }
+  /* Layout: Two columns for forms */
+  #home-page .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
 
-    /* Settlements: Switch to horizontal layout */
-    #settlements li {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .summary-info { width: auto; } /* Restore width */
-    
-    /* Radio buttons: Switch to horizontal layout */
-    .radio-group {
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-    }
+  /* Settlements: Switch to horizontal layout */
+  #settlements li {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .summary-info {
+    width: auto;
+  } /* Restore width */
+
+  /* Radio buttons: Switch to horizontal layout */
+  .radio-group {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
 }
 
 /* 💻 Desktop View (1024px and up) */
 @media (min-width: 1024px) {
-    /* Main Layout: Center the content more */
-    .page-container {
-        padding: 20px 0;
-    }
-    
-    /* Navigation: Standard desktop layout */
-    nav ul {
-        justify-content: flex-start;
-    }
-    .main-title {
-        font-size: 1.2rem;
-        margin-right: 30px;
-    }
-    .nav-links-group {
-        justify-content: flex-start;
-    }
-    nav ul li a { 
-        font-size: 1em; 
-        padding: 10px 15px;
-    }
-    .theme-switcher {
-        font-size: 0.8em;
-        margin-left: auto;
-    }
+  /* Main Layout: Center the content more */
+  .page-container {
+    padding: 20px 0;
+  }
 
-    /* Forms: Use the auto-fit grid for potentially more than 2 columns */
-    .dashboard-grid { 
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-        gap: 25px;
-    }
-    /* Charts and Settlements always take full width */
-    #summary-card, #spending-card, #chart-card {
-        grid-column: 1 / -1; 
-    }
+  /* Forms: Use the auto-fit grid for potentially more than 2 columns */
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+  }
+  /* Charts and Settlements always take full width */
+  #summary-card,
+  #spending-card,
+  #chart-card {
+    grid-column: 1 / -1;
+  }
 }
