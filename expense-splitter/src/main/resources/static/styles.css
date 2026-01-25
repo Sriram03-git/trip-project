@@ -75,7 +75,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 250px;
+  width: 260px;
   height: 100vh;
   background-color: var(--card-bg);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -89,7 +89,7 @@ body {
 }
 
 .sidebar.collapsed {
-  width: 70px;
+  width: 80px;
 }
 
 .sidebar-toggle {
@@ -212,16 +212,16 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
   .sidebar {
-    width: 200px;
+    width: 220px;
   }
   .page-container {
-    margin-left: 200px;
+    margin-left: 0;
   }
   .sidebar.collapsed {
-    width: 60px;
+    width: 70px;
   }
   .page-container.collapsed {
-    margin-left: 60px;
+    margin-left: 0;
   }
 }
 
@@ -246,7 +246,7 @@ body {
 }
 .page-container {
   flex: 1;
-  margin-left: 250px;
+  margin-left: 0;
   padding: 20px 15px;
   transition: margin-left 0.3s;
 }
@@ -528,17 +528,38 @@ button:hover {
 
 /* 💻 Desktop View (1024px and up) */
 @media (min-width: 1024px) {
-  /* Main Layout: Center the content more */
-  .page-container {
-    padding: 20px 0;
+  body {
+    flex-direction: row;
   }
 
-  /* Forms: Use the auto-fit grid for potentially more than 2 columns */
-  .dashboard-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
+  .sidebar {
+    position: static;
+    width: 260px;
+    height: auto;
+    min-height: 100vh;
   }
-  /* Charts and Settlements always take full width */
+
+  .sidebar.collapsed {
+    width: 80px;
+  }
+
+  .page-container {
+    margin-left: 0;
+    padding: 20px;
+    width: calc(100% - 260px);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+
   #summary-card,
   #spending-card,
   #chart-card {
