@@ -433,47 +433,96 @@ button:hover {
 /* --- Responsive Layout Breakpoints --- */
 /* ======================================= */
 
-/* 📱 Tablet View (600px and up) */
-@media (min-width: 600px) {
-  /* Navigation: Allow links to flow horizontally better */
-  nav ul {
-    justify-content: space-around;
-    flex-wrap: nowrap;
+/* 📱 Mobile View (up to 480px) */
+@media (max-width: 480px) {
+  .page-container {
+    padding: 10px;
+    margin-left: 0;
   }
-  .main-title {
+
+  .card {
+    padding: 12px;
+  }
+
+  h2 {
     font-size: 1.1rem;
-    flex-grow: 0;
-  }
-  nav ul li a {
-    font-size: 0.95em;
-    padding: 8px 10px;
-  }
-  .nav-links-group {
-    flex-grow: 1;
-    justify-content: center;
   }
 
-  /* Layout: Two columns for forms */
-  #home-page .dashboard-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  select {
+    padding: 12px;
+    font-size: 1rem;
   }
 
-  /* Settlements: Switch to horizontal layout */
+  button {
+    padding: 12px 15px;
+    font-size: 1rem;
+  }
+
+  .radio-group {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .sidebar-toggle {
+    font-size: 1.5rem;
+    padding: 12px;
+  }
+
   #settlements li {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    padding: 10px;
   }
-  .summary-info {
-    width: auto;
-  } /* Restore width */
 
-  /* Radio buttons: Switch to horizontal layout */
+  .summary-info {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+  }
+
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* 📱 Tablet View (481px to 1023px) */
+@media (min-width: 481px) and (max-width: 1023px) {
+  .page-container {
+    padding: 15px;
+  }
+
+  .dashboard-grid {
+    gap: 18px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  select {
+    padding: 11px;
+  }
+
+  button {
+    padding: 11px 16px;
+  }
+
   .radio-group {
     flex-direction: row;
     justify-content: space-around;
-    align-items: center;
+  }
+
+  canvas {
+    max-width: 100%;
+    height: auto;
   }
 }
 
