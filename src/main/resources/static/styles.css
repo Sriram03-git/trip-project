@@ -70,7 +70,104 @@ body {
     color 0.3s;
 }
 
-/* --- Sidebar Navigation --- */
+/* --- Mobile Top Navigation --- */
+.mobile-nav {
+  display: none; /* Hidden by default on desktop */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--card-bg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  padding: 10px 15px;
+}
+
+.mobile-nav-toggle {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.mobile-nav-menu {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0;
+  flex-direction: column;
+  width: 100%;
+}
+
+.mobile-nav.open .mobile-nav-menu {
+  display: flex;
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 8px;
+  margin: 5px 0;
+  transition: background-color 0.3s;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.mobile-nav-link i {
+  margin-right: 12px;
+  width: 20px;
+  text-align: center;
+}
+
+.mobile-nav-themes {
+  display: none;
+  padding: 10px 0;
+  border-top: 1px solid var(--border-color);
+  margin-top: 10px;
+}
+
+.mobile-nav.open .mobile-nav-themes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 15px;
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.mobile-theme-btn:hover,
+.mobile-theme-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.mobile-theme-btn i {
+  margin-right: 10px;
+  width: 18px;
+}
+
+/* --- Desktop Sidebar Navigation --- */
 .sidebar {
   position: fixed;
   top: 0;
@@ -433,10 +530,60 @@ button:hover {
 /* --- Responsive Layout Breakpoints --- */
 /* ======================================= */
 
-/* 📱 Mobile View (up to 480px) */
+/* 📱 Mobile View (up to 767px) - TOP NAVIGATION */
+@media (max-width: 767px) {
+  /* Show mobile nav, hide sidebar */
+  .mobile-nav {
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebar {
+    display: none;
+  }
+  
+  .page-container {
+    margin-left: 0;
+    padding: 80px 15px 20px 15px; /* Extra top padding for mobile nav */
+  }
+  
+  .mobile-nav-menu {
+    display: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mobile-nav.open .mobile-nav-menu {
+    display: flex;
+  }
+  
+  .mobile-nav-link {
+    flex: 1;
+    min-width: 45%;
+    justify-content: center;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .mobile-nav-link i {
+    margin-right: 5px;
+    margin-bottom: 2px;
+  }
+  
+  .mobile-nav-link span {
+    display: block;
+  }
+}
+
+/* 📱 Small Mobile View (up to 480px) */
 @media (max-width: 480px) {
   .page-container {
-    padding: 10px;
+    padding: 70px 10px 15px 10px;
     margin-left: 0;
   }
 

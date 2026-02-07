@@ -16,6 +16,66 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   </head>
   <body>
+    <!-- Mobile Top Navigation -->
+    <div id="mobileNav" class="mobile-nav">
+      <button id="mobileNavToggle" class="mobile-nav-toggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="mobile-nav-menu" id="mobileNavMenu">
+        <li>
+          <a
+            href="#home"
+            onclick="showPage('home-page', this); closeMobileNav();"
+            class="mobile-nav-link active"
+            data-page="home"
+            ><i class="fas fa-home"></i> <span>Home</span></a
+          >
+        </li>
+        <li>
+          <a
+            href="#settlements"
+            onclick="showPage('settlement-page', this); closeMobileNav();"
+            class="mobile-nav-link"
+            data-page="settlements"
+            ><i class="fas fa-balance-scale"></i>
+            <span>Settlements</span></a
+          >
+        </li>
+        <li>
+          <a
+            href="#spending"
+            onclick="showPage('spending-page', this); closeMobileNav();"
+            class="mobile-nav-link"
+            data-page="spending"
+            ><i class="fas fa-chart-pie"></i>
+            <span>Spending</span></a
+          >
+        </li>
+        <li>
+          <a
+            href="#balance"
+            onclick="showPage('balance-page', this); closeMobileNav();"
+            class="mobile-nav-link"
+            data-page="balance"
+            ><i class="fas fa-chart-line"></i>
+            <span>Net Balance</span></a
+          >
+        </li>
+      </ul>
+      <div class="mobile-nav-themes">
+        <button onclick="setTheme('light'); closeMobileNav();" class="mobile-theme-btn" id="mobileLightBtn">
+          <i class="fas fa-sun"></i> <span>Light</span>
+        </button>
+        <button onclick="setTheme('dark'); closeMobileNav();" class="mobile-theme-btn" id="mobileDarkBtn">
+          <i class="fas fa-moon"></i> <span>Dark</span>
+        </button>
+        <button onclick="setTheme('device'); closeMobileNav();" class="mobile-theme-btn" id="mobileDeviceBtn">
+          <i class="fas fa-desktop"></i> <span>System</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Desktop Sidebar -->
     <div id="sidebar" class="sidebar">
       <button id="sidebarToggle" class="sidebar-toggle">
         <i class="fas fa-bars"></i>

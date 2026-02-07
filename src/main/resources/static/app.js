@@ -43,11 +43,26 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("submit", handleUserSubmit);
   document.querySelector('.sidebar-link[href="#home"]').classList.add("active");
 
-  // Sidebar toggle
+  // Sidebar toggle (desktop)
   document
     .getElementById("sidebarToggle")
     .addEventListener("click", toggleSidebar);
+
+  // Mobile nav toggle
+  document
+    .getElementById("mobileNavToggle")
+    .addEventListener("click", toggleMobileNav);
 });
+
+// Function to close mobile nav
+function closeMobileNav() {
+  document.getElementById("mobileNav").classList.remove("open");
+}
+
+// Function to toggle mobile nav
+function toggleMobileNav() {
+  document.getElementById("mobileNav").classList.toggle("open");
+}
 
 // =========================================================================
 // THEME MANAGEMENT LOGIC
@@ -67,21 +82,24 @@ function applyTheme() {
 
   body.classList.remove(THEMES.LIGHT + "-theme", THEMES.DARK + "-theme");
 
-  // Remove active from all theme buttons
+  // Remove active from all theme buttons (sidebar and mobile)
   document
-    .querySelectorAll(".theme-btn")
+    .querySelectorAll(".theme-btn, .mobile-theme-btn")
     .forEach((btn) => btn.classList.remove("active"));
 
   if (currentTheme === THEMES.LIGHT) {
     body.classList.add(THEMES.LIGHT + "-theme");
     document.getElementById("lightBtn").classList.add("active");
+    document.getElementById("mobileLightBtn").classList.add("active");
   } else if (currentTheme === THEMES.DARK) {
     body.classList.add(THEMES.DARK + "-theme");
     document.getElementById("darkBtn").classList.add("active");
+    document.getElementById("mobileDarkBtn").classList.add("active");
   } else {
     // DEVICE
     // Apply no class, rely on CSS media query for device preference
     document.getElementById("deviceBtn").classList.add("active");
+    document.getElementById("mobileDeviceBtn").classList.add("active");
   }
 
   localStorage.setItem("expense_splitter_theme", currentTheme);
@@ -189,12 +207,30 @@ function showPage(pageId, element) {
   });
   document.getElementById(pageId).classList.add("active");
 
+  // Remove active from both sidebar and mobile nav links
   document
-    .querySelectorAll(".sidebar-link")
+    .querySelectorAll(".sidebar-link, .mobile-nav-link")
     .forEach((a) => a.classList.remove("active"));
+  
   if (element) {
     element.classList.add("active");
   }
+  
+  // Sync active state between sidebar and mobile nav
+  const pageMap = {
+    "home-page": ["home", "settlements", "spending", "balance"],
+    "settlement-page": ["settlements"],
+    "spending-page": ["spending"],
+    "balance-page": ["balance"]
+  };
+  
+  const dataPages = pageMap[pageId] || [];
+  dataPages.forEach(pageName => {
+    const sidebarLink = document.querySelector(`.sidebar-link[data-page="${pageName}"]`);
+    const mobileLink = document.querySelector(`.mobile-nav-link[data-page="${pageName}"]`);
+    if (sidebarLink) sidebarLink.classList.add("active");
+    if (mobileLink) mobileLink.classList.add("active");
+  });
 
   // Manually trigger resize/render when switching pages for Chart.js
   if (pageId === "balance-page") {
