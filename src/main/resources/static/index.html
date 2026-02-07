@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trip Expense Settlement Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div id="sidebar" class="sidebar">
+      <button id="sidebarToggle" class="sidebar-toggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="sidebar-menu">
+        <li>
+          <a
+            href="#home"
+            onclick="showPage('home-page', this)"
+            class="sidebar-link active"
+            data-page="home"
+            ><i class="fas fa-home"></i> <span>Home</span></a
+          >
+        </li>
+        <li>
+          <a
+            href="#settlements"
+            onclick="showPage('settlement-page', this)"
+            class="sidebar-link"
+            data-page="settlements"
+            ><i class="fas fa-balance-scale"></i>
+            <span>Simplified Settlements</span></a
+          >
+        </li>
+        <li>
+          <a
+            href="#spending"
+            onclick="showPage('spending-page', this)"
+            class="sidebar-link"
+            data-page="spending"
+            ><i class="fas fa-chart-pie"></i>
+            <span>Spending Contribution</span></a
+          >
+        </li>
+        <li>
+          <a
+            href="#balance"
+            onclick="showPage('balance-page', this)"
+            class="sidebar-link"
+            data-page="balance"
+            ><i class="fas fa-chart-line"></i>
+            <span>Net Balance Visualization</span></a
+          >
+        </li>
+      </ul>
+      <div class="sidebar-themes">
+        <button onclick="setTheme('light')" class="theme-btn" id="lightBtn">
+          <i class="fas fa-sun"></i> <span>Light</span>
+        </button>
+        <button onclick="setTheme('dark')" class="theme-btn" id="darkBtn">
+          <i class="fas fa-moon"></i> <span>Dark</span>
+        </button>
+        <button onclick="setTheme('device')" class="theme-btn" id="deviceBtn">
+          <i class="fas fa-desktop"></i> <span>System</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="page-container">
+      <div id="home-page" class="content-section active">
+        <div class="dashboard-grid">
+          <div class="card" id="user-form-card">
+            <h2>👤 Register New User</h2>
+            <p id="userMessage" class="feedback"></p>
+            <form id="userForm">
+              <label for="userName">Name:</label>
+              <input
+                type="text"
+                id="userName"
+                name="userName"
+                required
+                placeholder="e.g., Chitra"
+              />
+              <label for="userEmail">Email:</label>
+              <input
+                type="email"
+                id="userEmail"
+                name="userEmail"
+                required
+                placeholder="e.g., chitra@test.com"
+              />
+              <button type="submit">Register User</button>
+            </form>
+          </div>
+
+          <div class="card" id="expense-form-card">
+            <h2>➕ Add New Expense</h2>
+            <p id="expenseMessage" class="feedback"></p>
+            <form id="expenseForm">
+              <label for="description">Description:</label>
+              <input
+                type="text"
+                id="description"
+                name="description"
+                placeholder="e.g., Dinner at hotel"
+              />
+              <label for="amount">Amount (₹):</label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                required
+                min="0.01"
+                step="0.01"
+                placeholder="e.g., 5000.00"
+              />
+              <label for="paidBy">Paid By (User ID):</label>
+              <select id="paidBy" name="paidBy" required>
+                <option value="" disabled selected>Select User</option>
+              </select>
+
+              <label for="expenseCategory">Category:</label>
+              <select id="expenseCategory" name="expenseCategory" required>
+                <option value="">-- Select Category --</option>
+                <option value="FOOD">FOOD</option>
+                <option value="HOTEL">HOTEL</option>
+                <option value="FUEL">FUEL</option>
+                <option value="SHOPPING">SHOPPING</option>
+                <option value="MEDICINE">MEDICINE</option>
+                <option value="TRANSPORT">TRANSPORT(BUS,CAR,AUTO,CAB)</option>
+                <option value="OTHER">OTHER</option>
+              </select>
+
+              <div class="radio-group">
+                <label>Expense Type:</label>
+                <label
+                  ><input
+                    type="radio"
+                    name="expenseType"
+                    value="GROUP"
+                    checked
+                  />
+                  Group Expense (Split)</label
+                >
+                <label
+                  ><input type="radio" name="expenseType" value="PERSONAL" />
+                  Personal Expense (Not Split)</label
+                >
+              </div>
+
+              <button type="submit">Save Expense</button>
+            </form>
+          </div>
+
+          <div class="card" style="grid-column: 1 / -1">
+            <p style="font-size: 0.9em; color: #666; text-align: center">
+              Note: Use the registration form to create users first before
+              adding expenses.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="settlement-page" class="content-section">
+        <div class="dashboard-grid">
+          <div class="card" id="summary-card" style="grid-column: 1 / -1">
+            <h2>💰 Simplified Settlements List</h2>
+            <div id="settlements">
+              <p>Calculating settlements...</p>
+            </div>
+
+            <div id="categoryBreakdownSummary" style="margin-top: 30px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="spending-page" class="content-section">
+        <div class="dashboard-grid">
+          <div class="card" id="spending-card" style="grid-column: 1 / -1">
+            <h2>💸 Spending Contribution Breakdown</h2>
+            <label for="spendingChartType" style="font-weight: 600"
+              >Select Chart Type:</label
+            >
+            <select id="spendingChartType" onchange="fetchDataAndRender()">
+              <option value="pie">Pie Chart (Standard)</option>
+              <option value="doughnut">Donut Chart (Hole)</option>
+              <option value="polarArea">Polar Area (Visual Comparison)</option>
+              <option value="rotatingPie">Rotating Pie (Visual Tilt)</option>
+            </select>
+            <div class="chart-wrapper">
+              <canvas id="spendingChart"></canvas>
+            </div>
+            <div id="spendingSummary" style="margin-top: 20px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="balance-page" class="content-section">
+        <div class="dashboard-grid">
+          <div class="card" id="chart-card" style="grid-column: 1 / -1">
+            <h2>📊 Net Balance Visualization</h2>
+            <label for="balanceChartType" style="font-weight: 600"
+              >Select Chart Type:</label
+            >
+            <select id="balanceChartType" onchange="fetchDataAndRender()">
+              <option value="bar">Bar Chart (Net Balance)</option>
+              <option value="horizontalBar">Horizontal Bar</option>
+              <option value="line">Line Chart (Trend)</option>
+            </select>
+            <div class="chart-wrapper">
+              <canvas id="balanceChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
