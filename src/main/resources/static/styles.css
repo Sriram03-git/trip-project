@@ -527,195 +527,105 @@ button:hover {
 }
 
 /* ======================================= */
-/* --- Responsive Layout Breakpoints --- */
+/* --- REFACTORED Responsive Layout (Mobile-First) --- */
 /* ======================================= */
 
-/* 📱 Mobile View (up to 767px) - TOP NAVIGATION */
-@media (max-width: 767px) {
-  /* Show mobile nav, hide sidebar */
-  .mobile-nav {
-    display: flex;
-    align-items: center;
-  }
-  
-  .sidebar {
-    display: none;
-  }
-  
-  .page-container {
-    margin-left: 0;
-    padding: 80px 15px 20px 15px; /* Extra top padding for mobile nav */
-  }
-  
-  .mobile-nav-menu {
-    display: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .mobile-nav.open .mobile-nav-menu {
-    display: flex;
-  }
-  
-  .mobile-nav-link {
-    flex: 1;
-    min-width: 45%;
-    justify-content: center;
-    padding: 10px;
-    font-size: 0.9rem;
-  }
-  
-  .mobile-nav-link i {
-    margin-right: 5px;
-    margin-bottom: 2px;
-  }
-  
-  .mobile-nav-link span {
-    display: block;
-  }
-}
+/* Base styles are mobile-first. The .dashboard-grid is 1 column by default. */
 
 /* 📱 Small Mobile View (up to 480px) */
 @media (max-width: 480px) {
   .page-container {
     padding: 70px 10px 15px 10px;
-    margin-left: 0;
   }
-
   .card {
     padding: 12px;
   }
-
   h2 {
     font-size: 1.1rem;
   }
-
   input[type="text"],
   input[type="number"],
   input[type="email"],
-  select {
-    padding: 12px;
-    font-size: 1rem;
-  }
-
+  select,
   button {
-    padding: 12px 15px;
-    font-size: 1rem;
-  }
-
-  .radio-group {
-    padding: 8px;
-    font-size: 0.9rem;
-  }
-
-  .sidebar-toggle {
-    font-size: 1.5rem;
     padding: 12px;
-  }
-
-  #settlements li {
-    padding: 10px;
-  }
-
-  .summary-info {
-    font-size: 0.9rem;
-    padding: 5px 10px;
-  }
-
-  canvas {
-    max-width: 100%;
-    height: auto;
+    font-size: 1rem;
   }
 }
 
-/* 📱 Tablet View (481px to 1023px) */
-@media (min-width: 481px) and (max-width: 1023px) {
+/* 📱 General Mobile View (up to 767px) */
+@media (max-width: 767px) {
+  .sidebar {
+    display: none; /* Hide desktop sidebar */
+  }
+  .mobile-nav {
+    display: flex; /* Show mobile top navigation */
+    align-items: center;
+    justify-content: space-between;
+  }
   .page-container {
-    padding: 15px;
+    margin-left: 0; /* Ensure no margin from a hidden sidebar */
+    padding-top: 80px; /* Add space for the fixed mobile nav */
+  }
+}
+
+/* 💻 Tablet and Desktop View (768px and up) */
+@media (min-width: 768px) {
+  .mobile-nav {
+    display: none; /* Hide mobile nav */
   }
 
+  .sidebar {
+    display: flex; /* Show the desktop sidebar */
+    width: 260px;
+  }
+
+  .sidebar.collapsed {
+    width: 80px;
+  }
+
+  .page-container {
+    margin-left: 260px; /* Create space for the sidebar */
+    width: calc(100% - 260px);
+    padding-top: 20px; /* Reset mobile padding */
+    transition:
+      margin-left 0.3s,
+      width 0.3s;
+  }
+
+  /* When sidebar is collapsed, shrink the margin on the page container */
+  .sidebar.collapsed + .page-container {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+  /* More modern :has() selector for robustness */
+  body:has(.sidebar.collapsed) .page-container {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+
+  /* --- Dashboard Grid Layout --- */
+  /* Arrange cards side-by-side on larger screens */
   .dashboard-grid {
-    gap: 18px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 
-  .card {
-    padding: 16px;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  input[type="text"],
-  input[type="number"],
-  input[type="email"],
-  select {
-    padding: 11px;
-  }
-
-  button {
-    padding: 11px 16px;
-  }
-
+  /* Keep radio buttons in a row for better use of space */
   .radio-group {
     flex-direction: row;
     justify-content: space-around;
   }
-
-  canvas {
-    max-width: 100%;
-    height: auto;
-  }
 }
 
-/* 💻 Laptop View (1024px to 1439px) */
-@media (min-width: 1024px) and (max-width: 1439px) {
-  body {
-    flex-direction: row;
-  }
-
-  .sidebar {
-    position: fixed;
-    width: 240px;
-    height: 100vh;
-    z-index: 1000;
-  }
-
-  .sidebar.collapsed {
-    width: 70px;
-  }
-
-  .sidebar.collapsed .sidebar-link {
-    padding: 12px 15px;
-  }
-
-  .page-container {
-    margin-left: 240px;
-    padding: 20px;
-    width: calc(100% - 240px);
-    transition: margin-left 0.3s, width 0.3s;
-  }
-
-  .sidebar.collapsed + .page-container,
-  body:has(.sidebar.collapsed) .page-container {
-    margin-left: 70px;
-    width: calc(100% - 70px);
-  }
-
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* 🖥️ Desktop View (1440px+) */
+/* 🖥️ Large Desktop View (1440px+) */
 @media (min-width: 1440px) {
+  /* On very large screens, constrain the main content grid
+     to prevent it from becoming too wide and unreadable. */
   .dashboard-grid {
-    grid-template-columns: repeat(3, 1fr);
+    max-width: 1400px; /* Adjust as needed */
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 

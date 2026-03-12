@@ -1,47 +1,48 @@
 package com.trip.expense_splitter;
 
-import jakarta.persistence.*; 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import jakarta.persistence.*;
 
-@Entity 
+@Entity
 @Table(name = "expenses")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String description;
-
-    @Column(nullable = false, precision = 10, scale = 2) 
     private BigDecimal amount;
+    private String category;
 
-    // Who paid for the expense
-    @ManyToOne 
-    @JoinColumn(name = "paid_by_user_id", nullable = false) 
+    @ManyToOne
+    @JoinColumn(name = "paid_by_user_id")
     private User paidBy;
 
-    @Column(nullable = false)
-    private LocalDate expenseDate = LocalDate.now();
-    
-    // Defines if the expense is 'PERSONAL' (not split) or 'GROUP' (to be split)
-    @Enumerated(EnumType.STRING) // Saves the enum as a String in the DB
-    @Column(nullable = false)
-    private ExpenseType expenseType = ExpenseType.GROUP; // Default to GROUP
+    @Enumerated(EnumType.STRING)
+    private ExpenseType expenseType;
 
-    // Category for breakdown (e.g., 'FOOD', 'FUEL')
-    @Column(nullable = true)
-    private String category;
-    
-    // ----------------------
-    
-    // Old placeholder removed: private String splitType; 
+    private LocalDate expenseDate;
+
+    @PrePersist
+    protected void onCreate() {
+        expenseDate = LocalDate.now();
+    }
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+    public User getPaidBy() { return paidBy; }
+    public void setPaidBy(User paidBy) { this.paidBy = paidBy; }
+    public ExpenseType getExpenseType() { return expenseType; }
+    public void setExpenseType(ExpenseType expenseType) { this.expenseType = expenseType; }
+    public LocalDate getExpenseDate() { return expenseDate; }
+    public void setExpenseDate(LocalDate expenseDate) { this.expenseDate = expenseDate; }
 }

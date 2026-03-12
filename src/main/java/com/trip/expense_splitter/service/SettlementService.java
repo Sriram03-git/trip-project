@@ -144,11 +144,15 @@ public class SettlementService {
                 .orElse(null);
 
             if (topSpender != null) {
+                // Correctly calculate the total spend for the category by summing all user contributions
+                BigDecimal totalCategorySpend = catEntry.getValue().values().stream()
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
                 results.add(new CategorySpending(
                     category, 
                     topSpender.getKey(), 
-                    topSpender.getValue(),
-                    catEntry.getValue() // Include all user spending for this category
+                    totalCategorySpend, // Use the correctly calculated total
+                    catEntry.getValue() // Include the detailed breakdown of spending by user
                 ));
             }
         }

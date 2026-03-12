@@ -1,12 +1,12 @@
 package com.trip.expense_splitter.repository;
 
-import com.trip.expense_splitter.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
-@Repository
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.trip.expense_splitter.User;
+
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email); // Add this
+    // This method is used by the security layer to find users by their email (username)
+    Optional<User> findByEmail(String email);
 }

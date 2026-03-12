@@ -1,13 +1,18 @@
 package com.trip.expense_splitter.controller;
 
-import com.trip.expense_splitter.service.SettlementService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.trip.expense_splitter.service.SettlementService;
 
 @RestController
 @RequestMapping("/api/settlements") 
+@CrossOrigin(origins = "*") // Allow requests from any origin
 public class SettlementController {
 
     private final SettlementService settlementService;

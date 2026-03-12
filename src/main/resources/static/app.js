@@ -129,76 +129,18 @@ function setTheme(theme) {
 // Function to toggle sidebar collapse
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
-  const pageContainer = document.querySelector(".page-container");
   const windowWidth = window.innerWidth;
 
+  // On small mobile screens, the sidebar is a slide-in menu.
+  // The CSS handles this behavior with the `.open` class.
   if (windowWidth <= 480) {
-    // Mobile: slide sidebar in/out
     sidebar.classList.toggle("open");
-  } else if (windowWidth >= 481 && windowWidth <= 1023) {
-    // Tablet: collapse sidebar
-    sidebar.classList.toggle("collapsed");
-    if (sidebar.classList.contains("collapsed")) {
-      pageContainer.style.marginLeft = "70px";
-      pageContainer.style.width = "calc(100% - 70px)";
-    } else {
-      pageContainer.style.marginLeft = "220px";
-      pageContainer.style.width = "calc(100% - 220px)";
-    }
-  } else if (windowWidth >= 1024 && windowWidth <= 1439) {
-    // Laptop: collapse sidebar with proper margins
-    sidebar.classList.toggle("collapsed");
-    if (sidebar.classList.contains("collapsed")) {
-      pageContainer.style.marginLeft = "70px";
-      pageContainer.style.width = "calc(100% - 70px)";
-    } else {
-      pageContainer.style.marginLeft = "240px";
-      pageContainer.style.width = "calc(100% - 240px)";
-    }
   } else {
-    // Large Desktop (1440px+): collapse sidebar
+    // On larger screens (tablet/desktop), the sidebar is collapsible.
+    // The CSS handles the layout changes with the `.collapsed` class and the `:has()` selector.
     sidebar.classList.toggle("collapsed");
-    if (sidebar.classList.contains("collapsed")) {
-      pageContainer.style.marginLeft = "80px";
-      pageContainer.style.width = "calc(100% - 80px)";
-    } else {
-      pageContainer.style.marginLeft = "260px";
-      pageContainer.style.width = "calc(100% - 260px)";
-    }
   }
 }
-
-// Handle window resize to adjust layout
-function handleResize() {
-  const sidebar = document.getElementById("sidebar");
-  const pageContainer = document.querySelector(".page-container");
-  const windowWidth = window.innerWidth;
-
-  // Reset inline styles on resize to let CSS media queries take over
-  if (windowWidth <= 480) {
-    pageContainer.style.marginLeft = "";
-    pageContainer.style.width = "";
-    sidebar.classList.remove("collapsed");
-  } else if (windowWidth >= 481 && windowWidth <= 1023) {
-    if (!sidebar.classList.contains("collapsed")) {
-      pageContainer.style.marginLeft = "";
-      pageContainer.style.width = "";
-    }
-  } else if (windowWidth >= 1024 && windowWidth <= 1439) {
-    if (!sidebar.classList.contains("collapsed")) {
-      pageContainer.style.marginLeft = "240px";
-      pageContainer.style.width = "calc(100% - 240px)";
-    }
-  } else {
-    if (!sidebar.classList.contains("collapsed")) {
-      pageContainer.style.marginLeft = "260px";
-      pageContainer.style.width = "calc(100% - 260px)";
-    }
-  }
-}
-
-// Add resize event listener
-window.addEventListener("resize", handleResize);
 
 // Function to control page visibility
 function showPage(pageId, element) {
