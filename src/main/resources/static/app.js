@@ -207,7 +207,7 @@ async function fetchDataAndRender() {
 const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:8080/api"
-    : "https://trip-project-0ufy.onrender.com/api";
+    : (window.REACT_APP_API_URL || "https://trip-project-y8e3.onrender.com/api");
 
 async function fetchUsersMap() {
   try {
