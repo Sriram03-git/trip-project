@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trip.expense_splitter.User;
 import com.trip.expense_splitter.repository.UserRepository;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/users")
 public class UserController {
 

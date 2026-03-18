@@ -153,23 +153,27 @@ function showPage(pageId, element) {
   document
     .querySelectorAll(".sidebar-link, .mobile-nav-link")
     .forEach((a) => a.classList.remove("active"));
-  
+
   if (element) {
     element.classList.add("active");
   }
-  
+
   // Sync active state between sidebar and mobile nav
   const pageMap = {
     "home-page": ["home", "settlements", "spending", "balance"],
     "settlement-page": ["settlements"],
     "spending-page": ["spending"],
-    "balance-page": ["balance"]
+    "balance-page": ["balance"],
   };
-  
+
   const dataPages = pageMap[pageId] || [];
-  dataPages.forEach(pageName => {
-    const sidebarLink = document.querySelector(`.sidebar-link[data-page="${pageName}"]`);
-    const mobileLink = document.querySelector(`.mobile-nav-link[data-page="${pageName}"]`);
+  dataPages.forEach((pageName) => {
+    const sidebarLink = document.querySelector(
+      `.sidebar-link[data-page="${pageName}"]`,
+    );
+    const mobileLink = document.querySelector(
+      `.mobile-nav-link[data-page="${pageName}"]`,
+    );
     if (sidebarLink) sidebarLink.classList.add("active");
     if (mobileLink) mobileLink.classList.add("active");
   });
@@ -207,7 +211,7 @@ async function fetchDataAndRender() {
 const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:8080/api"
-    : (window.REACT_APP_API_URL || "https://trip-project-y8e3.onrender.com/api");
+    : window.REACT_APP_API_URL || "https://trip-project-1hmc.onrender.com/api";
 
 async function fetchUsersMap() {
   try {
@@ -607,7 +611,11 @@ async function handleExpenseSubmit(event) {
 
   // Handle Paid By (supports both input and select based on HTML state)
   // Checks for 'paidBy' (select) first, then 'paidById' (input)
-  let paidById = form.paidBy ? form.paidBy.value : (form.paidById ? form.paidById.value : null);
+  let paidById = form.paidBy
+    ? form.paidBy.value
+    : form.paidById
+      ? form.paidById.value
+      : null;
 
   const expenseData = {
     description: form.description.value,
