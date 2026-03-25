@@ -29,8 +29,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // 1. CSRF is disabled for stateless APIs
             .authorizeHttpRequests(auth -> auth
                 // --- Allow access to the frontend ---
-                .requestMatchers("/", "/index.html", "/app.js", "/styles.css").permitAll()
-                .requestMatchers("/favicon.ico", "/*.png", "/*.json").permitAll() // Allow static assets
+                .requestMatchers("/", "/index.html", "/*.css", "/*.js", "/favicon.ico", "/*.png", "/*.json").permitAll()
 
                 // --- Allow access to public API endpoints ---
                 .requestMatchers(HttpMethod.GET, "/api/users", "/api/expenses", "/api/settlements", "/api/spending-breakdown").permitAll()
