@@ -153,7 +153,9 @@ body {
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .mobile-theme-btn:hover,
@@ -635,4 +637,25 @@ button:hover {
   margin: 0 auto;
   max-width: 700px; /* Restricts chart width so it doesn't look too wide */
   width: 100%;
+}
+
+/* --- Offline Overlay --- */
+#offline-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--background-color);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+#offline-overlay h2 {
+  border-bottom: none;
+  margin-top: 20px;
 }
