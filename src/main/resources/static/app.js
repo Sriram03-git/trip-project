@@ -610,14 +610,6 @@ async function handleUserSubmit(event) {
 // =========================================================================
 
 function initOfflineDetection() {
-  // Dynamically inject Lottie Player script if not present
-  if (!document.querySelector('script[src*="lottie-player"]')) {
-    const script = document.createElement("script");
-    script.src =
-      "https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js";
-    document.head.appendChild(script);
-  }
-
   window.addEventListener("online", updateOnlineStatus);
   window.addEventListener("offline", updateOnlineStatus);
   updateOnlineStatus(); // Check on load
@@ -632,7 +624,7 @@ function updateOnlineStatus() {
       overlay = document.createElement("div");
       overlay.id = overlayId;
       overlay.innerHTML = `
-        <lottie-player src="/offline_dgaccel.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+        <lottie-player src="offline_dgaccel.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
         <h2>Check your internet connection</h2>
       `;
       document.body.appendChild(overlay);
