@@ -616,24 +616,13 @@ function initOfflineDetection() {
 }
 
 function updateOnlineStatus() {
-  const overlayId = "offline-overlay";
-  let overlay = document.getElementById(overlayId);
+  const overlay = document.getElementById("offline-overlay");
+  if (!overlay) return;
 
   if (!navigator.onLine) {
-    if (!overlay) {
-      overlay = document.createElement("div");
-      overlay.id = overlayId;
-      overlay.innerHTML = `
-        <lottie-player src="/offline_dgaccel.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
-        <h2>Check your internet connection</h2>
-      `;
-      document.body.appendChild(overlay);
-    }
     overlay.style.display = "flex";
   } else {
-    if (overlay) {
-      overlay.style.display = "none";
-    }
+    overlay.style.display = "none";
   }
 }
 

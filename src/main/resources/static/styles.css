@@ -648,7 +648,7 @@ button:hover {
   height: 100vh;
   background-color: var(--background-color);
   z-index: 10000;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
