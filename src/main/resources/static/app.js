@@ -624,7 +624,7 @@ function updateOnlineStatus() {
       overlay = document.createElement("div");
       overlay.id = overlayId;
       overlay.innerHTML = `
-        <lottie-player src="offline_dgaccel.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+        <lottie-player src="/offline_dgaccel.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
         <h2>Check your internet connection</h2>
       `;
       document.body.appendChild(overlay);
